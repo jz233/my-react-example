@@ -70,6 +70,7 @@ class Board extends React.Component {
 class Game extends React.Component {
   constructor(props){
     super(props);
+    //history数组,数组元素是一个或多个squares。每个squares存储的是棋盘布局
     this.state = {
       history: [{
         squares: Array(9).fill(null),
@@ -98,12 +99,26 @@ class Game extends React.Component {
     });
   }
 
+  jumpTo(move){
+
+  }
+
   render() {
     const history = this.state.history;
     //当前棋盘布局，是历史布局数组的最后一个元素
     const current = history[history.length - 1];
     //根据当前棋盘布局计算胜者
     const winner = calculateWinner(current.squares);
+
+    const moves = history.map((step, move) => {
+      const desc = move ?
+       'Go to move #'+ move : 'Go to game start';
+      return (
+        <li>
+          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        </li>
+      );
+    });
 
     let status;
     if(winner){
@@ -115,14 +130,16 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
+          {/* squares属性在Board中用this.props.squares取值 */}
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
           />
+          {/* 相当于Board中的this.props.onClick(i) */}
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
